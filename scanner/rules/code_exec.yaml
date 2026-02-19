@@ -1,0 +1,34 @@
+rules:
+  - id: dangerous-os-system-call
+    patterns:
+      - pattern: os.system(...)
+    message: "Potential code execution vulnerability: 'os.system' detected."
+    languages:
+      - python
+    severity: ERROR
+
+  - id: dangerous-subprocess-call
+    patterns:
+      - pattern: subprocess.call(...)
+      - pattern: subprocess.Popen(...)
+      - pattern: subprocess.run(...)
+    message: "Potential code execution vulnerability: 'subprocess' module usage detected."
+    languages:
+      - python
+    severity: WARNING
+
+  - id: dangerous-eval-call
+    patterns:
+      - pattern: eval(...)
+    message: "Potential code execution vulnerability: 'eval' detected."
+    languages:
+      - python
+    severity: ERROR
+
+  - id: dangerous-exec-call
+    patterns:
+      - pattern: exec(...)
+    message: "Potential code execution vulnerability: 'exec' detected."
+    languages:
+      - python
+    severity: ERROR

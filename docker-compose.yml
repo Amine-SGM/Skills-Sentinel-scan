@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+  scanner:
+    build: ./scanner
+    ports:
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - MAX_SCAN_SIZE_MB=10
+      - SANDBOX_TIMEOUT=30
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://scanner:8000
+    depends_on:
+      - scanner
