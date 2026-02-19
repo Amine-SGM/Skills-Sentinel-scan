@@ -71,6 +71,9 @@ Skill Sentinel Scan is a Dockerized security scanner designed to detect maliciou
 ### AI Configuration & Remediation
 ![AI Configuration](screenshots/ai_config.png)
 
+### Scan Results
+![Scan Results](screenshots/scan_results.png)
+
 ## 🔧 Development
 
 - **Scanner**: Located in `scanner/`. Run locally with `uvicorn main:app --reload` (requires local pip dependencies).
