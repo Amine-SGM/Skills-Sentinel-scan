@@ -114,8 +114,13 @@ export default function RemediationPanel({ findings, scanSource }: RemediationPa
                             value={apiKey}
                             onChange={(e) => setApiKey(e.target.value)}
                             className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                            placeholder={provider === 'pollinations' ? 'Optional for Pollinations' : 'sk- or key'}
+                            placeholder={provider === 'pollinations' ? 'Required (Get from enter.pollinations.ai)' : 'sk- or key'}
                         />
+                        {provider === 'pollinations' && (
+                            <p className="mt-1 text-xs text-gray-500">
+                                Get your key at <a href="https://enter.pollinations.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">enter.pollinations.ai</a>
+                            </p>
+                        )}
                     </div>
 
                     <button

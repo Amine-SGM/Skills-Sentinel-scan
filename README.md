@@ -21,7 +21,7 @@ Skill Sentinel Scan is a Dockerized security scanner designed to detect maliciou
   - **Supported Providers**:
     - **OpenAI** (GPT-3.5/4)
     - **Google AI Studio** (Gemini Pro)
-    - **Pollinations.AI** (Free, no key required)
+    - **Pollinations.AI** (Requires API Key from enter.pollinations.ai)
     - **OpenRouter**
 
 ## 🛠️ Architecture
