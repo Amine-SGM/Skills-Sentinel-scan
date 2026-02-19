@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import FileUpload from './components/FileUpload';
 import ResultsDashboard from './components/ResultsDashboard';
 import RemediationPanel from './components/RemediationPanel';
+import SettingsPanel from './components/SettingsPanel';
 import { ScanResult, scanSkill } from './utils/api';
 
 export default function Home() {
@@ -11,6 +12,11 @@ export default function Home() {
   const [results, setResults] = useState<ScanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [scanSource, setScanSource] = useState<File | string | null>(null);
+
+  // AI Settings State
+  const [provider, setProvider] = useState('openai');
+  const [apiKey, setApiKey] = useState('');
+  const [model, setModel] = useState('gpt-3.5-turbo');
 
   const handleUpload = async (fileOrUrl: File | string) => {
     setIsScanning(true);
@@ -40,6 +46,15 @@ export default function Home() {
           </p>
         </div>
 
+        <SettingsPanel
+          provider={provider}
+          setProvider={setProvider}
+          apiKey={apiKey}
+          setApiKey={setApiKey}
+          model={model}
+          setModel={setModel}
+        />
+
         <FileUpload onUpload={handleUpload} isScanning={isScanning} />
 
         {error && (
@@ -61,7 +76,13 @@ export default function Home() {
           <>
             <ResultsDashboard result={results} />
             {scanSource && results.some(r => ['ERROR', 'HIGH', 'MEDIUM', 'WARNING'].includes(r.severity.toUpperCase())) && (
-              <RemediationPanel findings={results} scanSource={scanSource} />
+              <RemediationPanel
+                findings={results}
+                scanSource={scanSource}
+                provider={provider}
+                apiKey={apiKey}
+                model={model}
+              />
             )}
           </>
         )}

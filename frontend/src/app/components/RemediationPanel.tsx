@@ -4,13 +4,13 @@ import { Finding, remediateSkill } from '../utils/api';
 interface RemediationPanelProps {
     findings: Finding[];
     scanSource: string | File;
+    provider: string;
+    apiKey: string;
+    model: string;
 }
 
-export default function RemediationPanel({ findings, scanSource }: RemediationPanelProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [provider, setProvider] = useState('openai');
-    const [apiKey, setApiKey] = useState('');
-    const [model, setModel] = useState('gpt-3.5-turbo');
+export default function RemediationPanel({ findings, scanSource, provider, apiKey, model }: RemediationPanelProps) {
+    const [isOpen, setIsOpen] = useState(true); // Default open when issues found
     const [isFixing, setIsFixing] = useState(false);
     const [fixedCode, setFixedCode] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -21,29 +21,10 @@ export default function RemediationPanel({ findings, scanSource }: RemediationPa
         setFixedCode(null);
 
         try {
-            // For now, we assume we just pass a placeholder "code" or logic to fetch it.
-            // Since we don't have the full code in the frontend easily (unless it was a file we uploaded),
-            // and the backend scan result didn't return the full source code (it returned findings),
-            // we might need to send a request to get the code or passing the findings is enough if the backend kept state?
-            // BUT: The backend is stateless (mostly).
-            // A robust solution would have the backend actually return the remediated code based on the scan_id if it cached it,
-            // or we send the file content again?
-
-            // Simplified: We will ask the backend to remediate the "code" associated with the findings.
-            // But wait, the backend `remediate` endpoint expects `code` string in the body.
-            // If we uploaded a file, we (frontend) have it. If it was a URL, we don't necessarily have the content unless we fetch it.
-
             let codeContent = "";
             if (scanSource instanceof File) {
                 codeContent = await scanSource.text();
             } else {
-                // It was a URL. We might simply pass the URL and let the backend re-fetch?
-                // The current `remediate` endpoint expects `code: str`.
-                // Let's assume for this MVP we only remediate if we have the FILE content accessible,
-                // OR we update backend to accept URL for remediation too.
-                // For now, prompt the user that URL remediation isn't fully supported in this UI step 
-                // without fetching the code first.
-                // Hack: Just send "Please fix the code at this URL: " + scanSource
                 codeContent = `Source Code URL: ${scanSource}`;
             }
 
@@ -81,47 +62,9 @@ export default function RemediationPanel({ findings, scanSource }: RemediationPa
 
             {isOpen && (
                 <div className="p-6 border-t border-blue-100">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">AI Provider</label>
-                            <select
-                                value={provider}
-                                onChange={(e) => setProvider(e.target.value)}
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                            >
-                                <option value="openai">OpenAI</option>
-                                <option value="openrouter">OpenRouter</option>
-                                <option value="ai_studio">Google AI Studio (Gemini)</option>
-                                <option value="pollinations">Pollinations.AI</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Model</label>
-                            <input
-                                type="text"
-                                value={model}
-                                onChange={(e) => setModel(e.target.value)}
-                                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                                placeholder="e.g., gpt-4, gemini-pro"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">API Key</label>
-                        <input
-                            type="password"
-                            value={apiKey}
-                            onChange={(e) => setApiKey(e.target.value)}
-                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm border p-2"
-                            placeholder={provider === 'pollinations' ? 'Required (Get from enter.pollinations.ai)' : 'sk- or key'}
-                        />
-                        {provider === 'pollinations' && (
-                            <p className="mt-1 text-xs text-gray-500">
-                                Get your key at <a href="https://enter.pollinations.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">enter.pollinations.ai</a>
-                            </p>
-                        )}
-                    </div>
+                    <p className="mb-4 text-sm text-gray-600">
+                        Using provider: <span className="font-semibold">{provider}</span> ({model})
+                    </p>
 
                     <button
                         onClick={handleRemediate}
