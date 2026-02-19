@@ -66,15 +66,12 @@ Skill Sentinel Scan is a Dockerized security scanner designed to detect maliciou
 4. Enter an API Key (if required) and Model name.
 5. Click **Generate Secure Code** to get a fixed version of your code.
 
-## � Screenshots
+##  Screenshots
 
 ### AI Configuration & Remediation
 ![AI Configuration](screenshots/ai_config.png)
 
-### Scan Results
-![Scan Results](screenshots/scan_results.png)
-
-## �🔧 Development
+## 🔧 Development
 
 - **Scanner**: Located in `scanner/`. Run locally with `uvicorn main:app --reload` (requires local pip dependencies).
 - **Frontend**: Located in `frontend/`. Run locally with `npm run dev` (requires Node.js).
